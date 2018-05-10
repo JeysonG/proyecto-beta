@@ -12,7 +12,7 @@ module.exports = (mainPath) => {
         readCsv: () => {
 
             let counter = 0;
-            let arrayValue = [];
+            //let arrayValue = [];
         
             let csvStream = csv.fromPath(mainPath, {
         
@@ -79,21 +79,13 @@ module.exports = (mainPath) => {
             }).on('end', () => {
         
                 console.log('Csv readed');
-                
-                let run = {
-
-                    "stateProcess": true
-
-                }
         
             }).on('error', (err) => {
         
                 console.log(err);
                 return false;
         
-            }); 
-
-            
+            });      
         },
 
         initRosetta: (idBeta, firstName, lastName, companyName, web) => {
@@ -142,15 +134,13 @@ module.exports = (mainPath) => {
 
                     console.log(err);
 
+                    return false;
+
                 }
                 else {
                     console.log('Ready update contacts table');
 
-                    let run = {
-
-                        "stateProcess": true
-                        
-                    }
+                    return true;
                 }
             });
         },
@@ -185,15 +175,13 @@ module.exports = (mainPath) => {
 
                         console.log(err);
 
+                        return false;
+
                     }
                     else {
                         console.log('Ready contacts table');
 
-                        let run = {
-
-                            "stateProcess": true
-                            
-                        }
+                        return true;
                     }
 
                 });
