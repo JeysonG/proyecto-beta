@@ -79,7 +79,12 @@ module.exports = (mainPath) => {
             }).on('end', () => {
         
                 console.log('Csv readed');
-                return true;
+                
+                let run = {
+
+                    "stateProcess": true
+
+                }
         
             }).on('error', (err) => {
         
@@ -125,18 +130,6 @@ module.exports = (mainPath) => {
                 console.log(e);
 
             });
-
-            /*pool.query("INSERT INTO rosetta(idros, idbeta) VALUES ('', '" + idBeta + "')",  
-            (err, result) => {
-
-                if(err){
-
-                    console.log('contacts rosetta');
-                    return false;
-
-                }
-            });*/
-
         },
 
         updateContact: (id, firstName, lastName, companyName, web) => {
@@ -152,6 +145,12 @@ module.exports = (mainPath) => {
                 }
                 else {
                     console.log('Ready update contacts table');
+
+                    let run = {
+
+                        "stateProcess": true
+                        
+                    }
                 }
             });
         },
@@ -189,6 +188,12 @@ module.exports = (mainPath) => {
                     }
                     else {
                         console.log('Ready contacts table');
+
+                        let run = {
+
+                            "stateProcess": true
+                            
+                        }
                     }
 
                 });
