@@ -3,13 +3,15 @@ let moment = require('moment');
 let pool = require('../dbConfig/credentials');
 let timeCreate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 
-module.exports = (arrayValue) => {
+module.exports = (csv) => {
 
     task = {
 
         address: () => {
 
-            let addressPromise = new Promise((res, rej) => {
+            console.log(csv);
+
+            /*let addressPromise = new Promise((res, rej) => {
 
                 let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
                 pool.query(sql, [arrayValue[0]], (error, result) => {
@@ -60,12 +62,14 @@ module.exports = (arrayValue) => {
 
                 console.log(e);
 
-            });
+            });*/
         },
 
         ccard: () => {
 
-            let cardPromise = new Promise((res, rej) => {
+            console.log(csv);
+
+            /*let cardPromise = new Promise((res, rej) => {
 
                 let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
                 pool.query(sql, [arrayValue[0]], (error, result) => {
@@ -116,7 +120,7 @@ module.exports = (arrayValue) => {
 
                 console.log(e);
 
-            });
+            });*/
         },
 
         contacts: () => {

@@ -4,7 +4,8 @@ let mysql = require('mysql');
 let moment = require('moment');
 let pool = require('../dbConfig/credentials');
 
-//let subIFile = 0;
+let line = 0;
+let insert = 0;
 
 module.exports = (filesPath, arrayFile) => {
 
@@ -20,10 +21,12 @@ module.exports = (filesPath, arrayFile) => {
         
             })
             .on('data', (record) => {
-        
+    
                 csvStream.pause();
         
-                if(counter > 0){    
+                if(counter > 0){   
+                    
+                    line++;
         
                     /*let arrayValue = [];
                     for(let i = 0; i < record.length; i++){
@@ -81,6 +84,8 @@ module.exports = (filesPath, arrayFile) => {
                 csvStream.resume();
         
             }).on('end', () => {
+
+                
         
                 console.log('Csv readed');
 
@@ -240,11 +245,13 @@ module.exports = (filesPath, arrayFile) => {
 
                 Promise.all([addressPromise, cardsPromise, contactsPromise, phonesPromise]).then((values) => {
 
-                    console.log(values);
-                    /*for(let i = 0; i < arrayFile.length; i++){
+                    insert++;
 
+                    if(line == insert){
 
-                    }*/
+                        task.octopus();
+
+                    }
 
                 }, reason => {
 
@@ -259,6 +266,23 @@ module.exports = (filesPath, arrayFile) => {
                 console.log(e);
 
             });
+        },
+
+        octopus: () => {
+
+            console.log('Octopus');
+
+            /*for(let i = 0; i < arrayFile.length; i++){
+
+                let inflowTask = (arrayFile[i].split('.'))[0];
+
+                let inFlow = require('./inFlow')(arrayFile[i]);
+
+                let run = 'inFlow.' + inflowTask + '();';
+
+                eval(run);
+
+            }}*/
         }
     }
 
