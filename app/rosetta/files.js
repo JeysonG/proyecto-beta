@@ -4,7 +4,7 @@ let mysql = require('mysql');
 let moment = require('moment');
 let pool = require('../dbConfig/credentials');
 
-let subIFile = 0;
+//let subIFile = 0;
 
 module.exports = (filesPath, arrayFile) => {
 
@@ -14,7 +14,7 @@ module.exports = (filesPath, arrayFile) => {
 
             let counter = 0;
         
-            let csvStream = csv.fromPath(filesPath + arrayFile[subIFile], {
+            let csvStream = csv.fromPath(filesPath + arrayFile[0], {
         
                 delimiter: ",",
         
@@ -25,20 +25,20 @@ module.exports = (filesPath, arrayFile) => {
         
                 if(counter > 0){    
         
-                    let arrayValue = [];
+                    /*let arrayValue = [];
                     for(let i = 0; i < record.length; i++){
 
                         arrayValue[i] = record[i];
 
-                    }
+                    }*/
 
-                    if(subIFile == 0){
+                    //if(subIFile == 0){
 
                         //VERIFICAR ROSETTA
                         let firstPromise = new Promise((res, rej) => {
 
                             let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                            pool.query(sql, [arrayValue[0]], (error, result) => {
+                            pool.query(sql, [record[0]], (error, result) => {
                         
                                 if(error){
             
@@ -57,7 +57,7 @@ module.exports = (filesPath, arrayFile) => {
                             if(res.length == 0){
 
                                 //CREATE ROSETTA
-                                task.initRosetta(arrayValue[0]);
+                                task.initRosetta(record[0]);
 
                             }
 
@@ -69,17 +69,11 @@ module.exports = (filesPath, arrayFile) => {
 
                         });
 
-                    } else {
+                    /*} else {
 
-                        /*let inflowTask = (arrayFile[subIFile-1].split('.'))[0];
+                        
 
-                        let inFlow = require('./inFlow')(arrayValue);
-
-                        let run = "inFlow." + inflowTask + "();";
-
-                        eval(run);*/
-
-                    }
+                    }*/
                 }
         
                 ++counter;
@@ -90,7 +84,7 @@ module.exports = (filesPath, arrayFile) => {
         
                 console.log('Csv readed');
 
-                if(arrayFile.length == (subIFile)){
+                /*if(arrayFile.length == (subIFile)){
 
                     console.log('Readed all csv files');
 
@@ -101,7 +95,7 @@ module.exports = (filesPath, arrayFile) => {
 
                 }
 
-                subIFile++;
+                subIFile++;*/
         
             }).on('error', (err) => {
         
@@ -247,6 +241,10 @@ module.exports = (filesPath, arrayFile) => {
                 Promise.all([addressPromise, cardsPromise, contactsPromise, phonesPromise]).then((values) => {
 
                     console.log(values);
+                    /*for(let i = 0; i < arrayFile.length; i++){
+
+
+                    }*/
 
                 }, reason => {
 
