@@ -272,7 +272,7 @@ module.exports = (filesPath, arrayFile) => {
 
             console.log('Octopus');
 
-            /*for(let i = 0; i < arrayFile.length; i++){
+            for(let i = 0; i < arrayFile.length; i++){
 
                 let inflowTask = (arrayFile[i].split('.'))[0];
 
@@ -282,7 +282,7 @@ module.exports = (filesPath, arrayFile) => {
 
                 eval(run);
 
-            }}*/
+            }
         }
     }
 
