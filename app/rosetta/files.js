@@ -23,7 +23,7 @@ module.exports = (filesPath, arrayFile) => {
         
                 csvStream.pause();
         
-                if(counter > 0 && counter <= 5){    
+                if(counter > 0){    
         
                     let arrayValue = [];
                     for(let i = 0; i < record.length; i++){
@@ -71,13 +71,13 @@ module.exports = (filesPath, arrayFile) => {
 
                     } else {
 
-                        let inflowTask = (arrayFile[subIFile-1].split('.'))[0];
+                        /*let inflowTask = (arrayFile[subIFile-1].split('.'))[0];
 
                         let inFlow = require('./inFlow')(arrayValue);
 
                         let run = "inFlow." + inflowTask + "();";
 
-                        eval(run);
+                        eval(run);*/
 
                     }
                 }
@@ -135,7 +135,6 @@ module.exports = (filesPath, arrayFile) => {
                 if(res){
 
                     //CREATE CONTACT
-                    console.log('hey');
                     task.createContact(idBeta);
 
                 }
@@ -168,83 +167,92 @@ module.exports = (filesPath, arrayFile) => {
 
             thirdPromise.then((res) => {
 
-                console.log(res[0].idros);
-            
-                pool.query("INSERT INTO address(contact_id) VALUES \
-                ('"+ res[0].idros + "')",  
-                (err, result) => {
+                let idRos = res[0].idros;
 
-                    if(err){
+                let addressPromise = new Promise((res, rej) => {
 
-                        console.log(err);
+                    pool.query("INSERT INTO address(contact_is) VALUES \
+                    ('"+ idRos + "')",  
+                    (err, result) => {
 
-                        return false;
+                        if(err){
 
-                    }
-                    else {
-                        console.log('Ready address table');
+                            rej(err);
 
-                        return true;
-                    }
 
+                        }
+                        else {
+
+                            res('Ready address table');
+
+                        }
+
+                    });
                 });
 
-                pool.query("INSERT INTO cards(contact_id) VALUES \
-                ('"+ res[0].idros + "')",  
-                (err, result) => {
+                let cardsPromise = new Promise((res, rej) => {
 
-                    if(err){
+                    pool.query("INSERT INTO cards(contact_id) VALUES \
+                    ('"+ idRos + "')",  
+                    (err, result) => {
 
-                        console.log(err);
+                        if(err){
 
-                        return false;
+                            rej(err);
 
-                    }
-                    else {
-                        console.log('Ready cards table');
+                        }
+                        else {
+                            res('Ready cards table');
+                        }
 
-                        return true;
-                    }
-
+                    });
                 });
 
-                pool.query("INSERT INTO contacts(id) VALUES \
-                ('"+ res[0].idros + "')",  
-                (err, result) => {
+                let contactsPromise = new Promise ((res, rej) => {
 
-                    if(err){
+                    pool.query("INSERT INTO contacts(id) VALUES \
+                    ('"+ idRos + "')",  
+                    (err, result) => {
 
-                        console.log(err);
+                        if(err){
 
-                        return false;
+                            rej(err);
 
-                    }
-                    else {
-                        console.log('Ready contacts table');
+                        }
+                        else {
+                            res('Ready contacts table');
+                        }
 
-                        return true;
-                    }
-
+                    });
                 });
 
-                pool.query("INSERT INTO phones(contact_id) VALUES \
-                ('"+ res[0].idros + "')",  
-                (err, result) => {
+                let phonesPromise = new Promise ((res, rej) => {
 
-                    if(err){
+                    pool.query("INSERT INTO phones(contact_id) VALUES \
+                    ('"+ idRos + "')",  
+                    (err, result) => {
 
-                        console.log(err);
+                        if(err){
 
-                        return false;
+                            rej(err);
 
-                    }
-                    else {
-                        console.log('Ready phones table');
+                        }
+                        else {
+                            res('Ready phones table');
+                        }
 
-                        return true;
-                    }
-
+                    });
                 });
+
+                Promise.all([addressPromise, cardsPromise, contactsPromise, phonesPromise]).then((values) => {
+
+                    console.log(values);
+
+                }, reason => {
+
+                    console.log(reason);
+
+                })
 
             }, (err) => {
                 console.log(err);

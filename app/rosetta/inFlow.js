@@ -30,12 +30,9 @@ module.exports = (arrayValue) => {
 
                 if(res.length > 0){
 
-                    //STATES
-                    task.state(res[0].idros, arrayValue[4]);
-
                     //UPDATE ADDRESS
                     pool.query("UPDATE  address SET address = '" + arrayValue[1] + "', city = '" + arrayValue[2] + 
-                    "', country = '" + arrayValue[3] + "', zip = '" + arrayValue[5] + "', updated_at = '" + timeCreate + "' WHERE contact_id = " + res[0].idros,  
+                    "', country = '" + arrayValue[3] + "', zip = '" + arrayValue[5] + "', updated_at = '" + timeCreate + "' WHERE contact_is = " + res[0].idros,  
                     (err) => {
 
                         if(err){
@@ -52,6 +49,9 @@ module.exports = (arrayValue) => {
                         }
                     });
 
+                    //STATES
+                    task.state(res[0].idros, arrayValue[4]);
+
                 }
 
             }, (err) => {
@@ -63,7 +63,7 @@ module.exports = (arrayValue) => {
             });
         },
 
-        card: () => {
+        ccard: () => {
 
             let cardPromise = new Promise((res, rej) => {
 
@@ -158,7 +158,7 @@ module.exports = (arrayValue) => {
                 if(res.length > 0){
 
                     //UPDATE STATE ADDRESS
-                    pool.query("UPDATE  address SET state_id = " + res[0].id + " WHERE contact_id = " + contact_id ,  
+                    pool.query("UPDATE  address SET state_id = " + res[0].id + " WHERE contact_is = " + contact_id ,  
                     (err) => {
 
                         if(err){
