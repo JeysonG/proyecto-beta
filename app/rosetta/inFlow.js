@@ -45,20 +45,41 @@ module.exports = (filesPath, fileCsv) => {
 
                     firstPromise.then((idRos) => {
 
-                        //UPDATE ADDRESS
-                        pool.query("UPDATE  address SET address = '" + record[1] + "', city = '" + record[2] + 
-                        "', country = '" + record[3] + "', zip = '" + record[5] + "', updated_at = '" + timeCreate + "' WHERE contact_is = " + idRos,  
-                        (err) => {
+                        let secondPromise = new Promise((res, rej) => {
 
-                            if(err){
+                            //INSERT STATE ADDRESS
+                            let sql = "INSERT INTO  address (contact_is, address, city, country, zip, created_at) VALUES \
+                                ('"+ idRos + "', '" + record[1] + "', '" + record[2] + "', '" + record[3] + "', '" + record[5] + "', '" + timeCreate + "')";
+                            pool.query(sql, (err) => {
 
-                                console.log(err);
+                                if(err){
 
-                            }
+                                    rej(err);
+
+                                }
+                                else {
+
+                                    res(idRos);
+                                }
+                            });
+
+                            
                         });
 
-                        //STATES
-                        task.state(idRos, record[4]);
+                        secondPromise.then((idRos) => {
+
+                            //STATES
+                            task.state(idRos, record[4]);
+
+                        }, (err) => {
+
+                            console.log(err);
+
+                        }).catch((e) => {
+
+                            console.log(e);
+
+                        });
 
                     }, (err) => {
 
@@ -123,10 +144,10 @@ module.exports = (filesPath, fileCsv) => {
 
                     firstPromise.then((idRos) => {
 
-                        //UPDATE CARDS
-                        pool.query("UPDATE  cards SET card = '" + record[1] + "', pin = '" + record[2] + 
-                        "', cvv = '" + record[3] + "', updated_at = '" + timeCreate + "' WHERE contact_id = " + idRos,  
-                        (err) => {
+                        //INSERT CARDS
+                        let sql = "INSERT INTO  cards (contact_id, card, pin, cvv, created_at) VALUES \
+                        ('"+ idRos + "', '" + record[1] + "', '" + record[2] + "', '" + record[3] + "', '" + timeCreate + "')";
+                        pool.query(sql, (err) => {
 
                             if(err){
 
@@ -198,17 +219,17 @@ module.exports = (filesPath, fileCsv) => {
 
                     firstPromise.then((idRos) => {
 
-                        //UPDATE CONTACTS
-                        pool.query("UPDATE  contacts SET first_name = '" + record[1] + "', last_name = '" + record[2] + 
-                        "', company = '" + record[3] + "', web = '" + record[4] +"', updated_at = '" + timeCreate + "' WHERE id = " + idRos,  
-                        (err) => {
+                        //INSERT CONTACTS
+                        let sql = "INSERT INTO  contacts (id, first_name, last_name, company, web, created_at) VALUES \
+                        ('"+ idRos + "', '" + record[1] + "', '" + record[2] + "', '" + record[3] + "', '" + record[4] + "', '" + timeCreate + "')";
+                        pool.query(sql, (err) => {
 
-                            if(err){
+                        if(err){
 
-                                console.log(err);
+                            console.log(err);
 
-                            }
-                        });
+                        }
+                    });
 
                     }, (err) => {
 
@@ -350,16 +371,17 @@ module.exports = (filesPath, fileCsv) => {
 
                         let numberPhone = (arrayPhone[0] + arrayPhone[2] + arrayPhone[4]); 
 
-                        //UPDATE PHONES
-                        pool.query("UPDATE  phones SET number = '" + numberPhone + "', type = '" + record[1] + "' WHERE contact_id = " + idRos,  
-                        (err) => {
+                        //INSERT CONTACTS
+                        let sql = "INSERT INTO  phones (contact_id, number, type, created_at) VALUES \
+                        ('"+ idRos + "', '" + numberPhone + "', '" + record[1] + "', '" + timeCreate + "')";
+                        pool.query(sql, (err) => {
 
-                            if(err){
+                        if(err){
 
-                                console.log(err);
+                            console.log(err);
 
-                            }
-                        });
+                        }
+                    });
                     }, (err) => {
 
                         console.log(err);

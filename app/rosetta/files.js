@@ -103,8 +103,16 @@ module.exports = (filesPath, arrayFile) => {
                 
                 if(res){
 
-                    //CREATE CONTACT
-                    task.createContact(idBeta);
+                    /*//CREATE CONTACT
+                    task.createContact(idBeta);*/
+
+                    insert++;
+
+                    if(line == insert){
+
+                        task.octopus();
+
+                    }
 
                 }
             }, (err) => {
@@ -118,7 +126,7 @@ module.exports = (filesPath, arrayFile) => {
             });
         },
 
-        createContact: (idBeta) => {
+        /*createContact: (idBeta) => {
 
             let thirdPromise = new Promise((res, rej) => {
 
@@ -243,7 +251,7 @@ module.exports = (filesPath, arrayFile) => {
                 console.log(e);
 
             });
-        },
+        },*/
 
         octopus: () => {
 
