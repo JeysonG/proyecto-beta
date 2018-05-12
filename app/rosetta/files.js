@@ -22,7 +22,7 @@ module.exports = (filesPath, arrayFile) => {
     
                 csvStream.pause();
         
-                if(counter > 0 && counter <= 5){   
+                if(counter > 0){   
                     
                     line++;
         
