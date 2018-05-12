@@ -26,55 +26,42 @@ module.exports = (filesPath, arrayFile) => {
                     
                     line++;
         
-                    /*let arrayValue = [];
-                    for(let i = 0; i < record.length; i++){
+                    //VERIFICAR ROSETTA
+                    let firstPromise = new Promise((res, rej) => {
 
-                        arrayValue[i] = record[i];
+                        let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                        pool.query(sql, [record[0]], (error, result) => {
+                    
+                            if(error){
+        
+                                rej(error);
+        
+                            }
+                            else{
 
-                    }*/
-
-                    //if(subIFile == 0){
-
-                        //VERIFICAR ROSETTA
-                        let firstPromise = new Promise((res, rej) => {
-
-                            let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                            pool.query(sql, [record[0]], (error, result) => {
-                        
-                                if(error){
-            
-                                    rej(error);
-            
-                                }
-                                else{
-                                    res(JSON.parse(JSON.stringify(result)));
-                                }
-                            });
-
-                        });
-
-                        firstPromise.then((res) => {
-
-                            if(res.length == 0){
-
-                                //CREATE ROSETTA
-                                task.initRosetta(record[0]);
+                                res(JSON.parse(JSON.stringify(result)));
 
                             }
-
-                        }, (err) => {
-                            console.log(err);
-                        }).catch((e) => {
-
-                            console.log(e);
-
                         });
+                    });
 
-                    /*} else {
+                    firstPromise.then((res) => {
 
-                        
+                        if(res.length == 0){
 
-                    }*/
+                            //CREATE ROSETTA
+                            task.initRosetta(record[0]);
+
+                        }
+                    }, (err) => {
+
+                        console.log(err);
+
+                    }).catch((e) => {
+
+                        console.log(e);
+
+                    });
                 }
         
                 ++counter;
@@ -83,30 +70,13 @@ module.exports = (filesPath, arrayFile) => {
         
             }).on('end', () => {
 
-                
-        
                 console.log('Csv readed');
-
-                /*if(arrayFile.length == (subIFile)){
-
-                    console.log('Readed all csv files');
-
-                }
-                else {
-
-                    task.readCsv();
-
-                }
-
-                subIFile++;*/
         
             }).on('error', (err) => {
         
                 console.log(err);
-                return false;
         
             }); 
-
         },
 
         initRosetta: (idBeta) => {
@@ -122,7 +92,9 @@ module.exports = (filesPath, arrayFile) => {
 
                     }
                     else {
+
                         res(result);
+
                     }
                 });
             });
@@ -136,7 +108,9 @@ module.exports = (filesPath, arrayFile) => {
 
                 }
             }, (err) => {
-                console.log(err)
+
+                console.log(err);
+
             }).catch((e) => {
 
                 console.log(e);
@@ -157,7 +131,9 @@ module.exports = (filesPath, arrayFile) => {
 
                     }
                     else{
+
                         res(JSON.parse(JSON.stringify(result)));
+
                     }
                 });
             });
@@ -180,7 +156,7 @@ module.exports = (filesPath, arrayFile) => {
                         }
                         else {
 
-                            res('Ready address table');
+                            res('Load address table');
 
                         }
 
@@ -199,9 +175,10 @@ module.exports = (filesPath, arrayFile) => {
 
                         }
                         else {
-                            res('Ready cards table');
-                        }
 
+                            res('Load cards table');
+
+                        }
                     });
                 });
 
@@ -217,9 +194,10 @@ module.exports = (filesPath, arrayFile) => {
 
                         }
                         else {
-                            res('Ready contacts table');
-                        }
 
+                            res('Load contacts table');
+
+                        }
                     });
                 });
 
@@ -235,9 +213,10 @@ module.exports = (filesPath, arrayFile) => {
 
                         }
                         else {
-                            res('Ready phones table');
-                        }
 
+                            res('Load phones table');
+
+                        }
                     });
                 });
 

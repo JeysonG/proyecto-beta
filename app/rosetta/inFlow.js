@@ -4,8 +4,6 @@ let moment = require('moment');
 let pool = require('../dbConfig/credentials');
 let timeCreate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 
-let line = 0;
-
 module.exports = (filesPath, fileCsv) => {
 
     task = {
@@ -24,25 +22,24 @@ module.exports = (filesPath, fileCsv) => {
                 csvStream.pause();
         
                 if(counter > 0){   
-                    
-                    line++;
 
-                    //VERIFICAR ROSETTA
-
+                    //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
 
-                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record[0]], (error, result) => {
+                        let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                        pool.query(sql, [record[0]], (error, result) => {
 
-                        if(error){
+                            if(error){
 
-                            rej(error);
+                                rej(error);
 
-                        }
-                        else{
-                            res(JSON.parse(JSON.stringify(result[0].idros)));
-                        }
-                    });
+                            }
+                            else{
+
+                                res(JSON.parse(JSON.stringify(result[0].idros)));
+                                
+                            }
+                        });
 
                     });
 
@@ -64,16 +61,16 @@ module.exports = (filesPath, fileCsv) => {
                         task.state(idRos, record[4]);
 
                     }, (err) => {
+
                         console.log(err);
+
                     }).catch((e) => {
 
                         console.log(e);
 
                     });
+                }
 
-                    }
-            
-        
                 ++counter;
         
                 csvStream.resume();
@@ -104,10 +101,7 @@ module.exports = (filesPath, fileCsv) => {
         
                 if(counter > 0){   
                     
-                    line++;
-
-                    //VERIFICAR ROSETTA
-
+                    //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
 
                     let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
@@ -119,7 +113,9 @@ module.exports = (filesPath, fileCsv) => {
 
                         }
                         else{
+
                             res(JSON.parse(JSON.stringify(result[0].idros)));
+
                         }
                     });
 
@@ -127,7 +123,7 @@ module.exports = (filesPath, fileCsv) => {
 
                     firstPromise.then((idRos) => {
 
-                        //UPDATE ADDRESS
+                        //UPDATE CARDS
                         pool.query("UPDATE  cards SET card = '" + record[1] + "', pin = '" + record[2] + 
                         "', cvv = '" + record[3] + "', updated_at = '" + timeCreate + "' WHERE contact_id = " + idRos,  
                         (err) => {
@@ -140,13 +136,14 @@ module.exports = (filesPath, fileCsv) => {
                         });
 
                     }, (err) => {
+
                         console.log(err);
+
                     }).catch((e) => {
 
                         console.log(e);
 
                     });
-
                 }    
         
                 ++counter;
@@ -178,11 +175,8 @@ module.exports = (filesPath, fileCsv) => {
                 csvStream.pause();
         
                 if(counter > 0){   
-                    
-                    line++;
 
-                    //VERIFICAR ROSETTA
-
+                    //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
 
                     let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
@@ -194,7 +188,9 @@ module.exports = (filesPath, fileCsv) => {
 
                         }
                         else{
+
                             res(JSON.parse(JSON.stringify(result[0].idros)));
+
                         }
                     });
 
@@ -202,7 +198,7 @@ module.exports = (filesPath, fileCsv) => {
 
                     firstPromise.then((idRos) => {
 
-                        //UPDATE ADDRESS
+                        //UPDATE CONTACTS
                         pool.query("UPDATE  contacts SET first_name = '" + record[1] + "', last_name = '" + record[2] + 
                         "', company = '" + record[3] + "', web = '" + record[4] +"', updated_at = '" + timeCreate + "' WHERE id = " + idRos,  
                         (err) => {
@@ -215,7 +211,9 @@ module.exports = (filesPath, fileCsv) => {
                         });
 
                     }, (err) => {
+
                         console.log(err);
+
                     }).catch((e) => {
 
                         console.log(e);
@@ -253,11 +251,8 @@ module.exports = (filesPath, fileCsv) => {
                 csvStream.pause();
         
                 if(counter > 0){   
-                    
-                    line++;
 
-                    //VERIFICAR ROSETTA
-
+                    //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
 
                     let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
@@ -277,7 +272,7 @@ module.exports = (filesPath, fileCsv) => {
 
                     firstPromise.then((idRos) => {
 
-                        //UPDATE ADDRESS
+                        //UPDATE CONTACTS
                         pool.query("UPDATE  contacts SET email = '" + record[1] + "' WHERE id = " + idRos,  
                         (err) => {
 
@@ -289,7 +284,9 @@ module.exports = (filesPath, fileCsv) => {
                         });
 
                     }, (err) => {
+
                         console.log(err);
+
                     }).catch((e) => {
 
                         console.log(e);
@@ -327,26 +324,24 @@ module.exports = (filesPath, fileCsv) => {
                 csvStream.pause();
         
                 if(counter > 0){   
-                    
-                    line++;
 
-                    //VERIFICAR ROSETTA
-
+                    //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
 
-                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record[0]], (error, result) => {
+                        let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                        pool.query(sql, [record[0]], (error, result) => {
 
-                        if(error){
+                            if(error){
 
-                            rej(error);
+                                rej(error);
 
-                        }
-                        else{
-                            res(JSON.parse(JSON.stringify(result[0].idros)));
-                        }
-                    });
+                            }
+                            else{
 
+                                res(JSON.parse(JSON.stringify(result[0].idros)));
+
+                            }
+                        });
                     });
 
                     firstPromise.then((idRos) => {
@@ -355,7 +350,7 @@ module.exports = (filesPath, fileCsv) => {
 
                         let numberPhone = (arrayPhone[0] + arrayPhone[2] + arrayPhone[4]); 
 
-                        //UPDATE ADDRESS
+                        //UPDATE PHONES
                         pool.query("UPDATE  phones SET number = '" + numberPhone + "', type = '" + record[1] + "' WHERE contact_id = " + idRos,  
                         (err) => {
 
@@ -365,15 +360,15 @@ module.exports = (filesPath, fileCsv) => {
 
                             }
                         });
-
                     }, (err) => {
+
                         console.log(err);
+
                     }).catch((e) => {
 
                         console.log(e);
 
                     });
-
                 }    
         
                 ++counter;
@@ -395,6 +390,7 @@ module.exports = (filesPath, fileCsv) => {
 
             let statePromise = new Promise((res, rej) => {
 
+                //CONSULTAR STATES
                 let sql = "SELECT id FROM states WHERE short_name = ?";
                 pool.query(sql, [shortName], (error, result) => {
             
@@ -404,10 +400,11 @@ module.exports = (filesPath, fileCsv) => {
 
                     }
                     else{
+
                         res(JSON.parse(JSON.stringify(result)));
+
                     }
                 });
-
             });
 
             statePromise.then((res) => {
@@ -432,7 +429,9 @@ module.exports = (filesPath, fileCsv) => {
 
                 }
             }, (err) => {
+
                 console.log(err);
+
             }).catch((e) => {
 
                 console.log(e);
