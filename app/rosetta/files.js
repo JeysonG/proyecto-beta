@@ -142,46 +142,6 @@ module.exports = (filesPath, arrayFile) => {
 
                 let idRos = res[0].idros;
 
-               /* let addressPromise = new Promise((res, rej) => {
-
-                    pool.query("INSERT INTO address(contact_is) VALUES \
-                    ('"+ idRos + "')",  
-                    (err, result) => {
-
-                        if(err){
-
-                            rej(err);
-
-
-                        }
-                        else {
-
-                            res('Load address table');
-
-                        }
-
-                    });
-                });
-
-                let cardsPromise = new Promise((res, rej) => {
-
-                    pool.query("INSERT INTO cards(contact_id) VALUES \
-                    ('"+ idRos + "')",  
-                    (err, result) => {
-
-                        if(err){
-
-                            rej(err);
-
-                        }
-                        else {
-
-                            res('Load cards table');
-
-                        }
-                    });
-                });*/
-
                 let contactsPromise = new Promise ((res, rej) => {
 
                     pool.query("INSERT INTO contacts(id) VALUES \
@@ -222,41 +182,6 @@ module.exports = (filesPath, arrayFile) => {
                     console.log(e);
 
                 });
-
-                /*let phonesPromise = new Promise ((res, rej) => {
-
-                    pool.query("INSERT INTO phones(contact_id) VALUES \
-                    ('"+ idRos + "')",  
-                    (err, result) => {
-
-                        if(err){
-
-                            rej(err);
-
-                        }
-                        else {
-
-                            res('Load phones table');
-
-                        }
-                    });
-                });
-
-                Promise.all([addressPromise, cardsPromise, contactsPromise, phonesPromise]).then((values) => {
-
-                    insert++;
-
-                    if(line == insert){
-
-                        task.octopus();
-
-                    }
-
-                }, reason => {
-
-                    console.log(reason);
-
-                })*/
 
             }, (err) => {
                 console.log(err);
