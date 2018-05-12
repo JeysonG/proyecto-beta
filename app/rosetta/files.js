@@ -1,7 +1,5 @@
-let fs = require('fs');
 let csv = require('fast-csv');
 let mysql = require('mysql');
-let moment = require('moment');
 let pool = require('../dbConfig/credentials');
 
 let line = 0;
@@ -24,7 +22,7 @@ module.exports = (filesPath, arrayFile) => {
     
                 csvStream.pause();
         
-                if(counter > 0){   
+                if(counter > 0 && counter <= 5){   
                     
                     line++;
         
@@ -276,7 +274,7 @@ module.exports = (filesPath, arrayFile) => {
 
                 let inflowTask = (arrayFile[i].split('.'))[0];
 
-                let inFlow = require('./inFlow')(arrayFile[i]);
+                let inFlow = require('./inFlow')(filesPath, arrayFile[i]);
 
                 let run = 'inFlow.' + inflowTask + '();';
 
