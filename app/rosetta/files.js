@@ -103,16 +103,8 @@ module.exports = (filesPath, arrayFile) => {
                 
                 if(res){
 
-                    /*//CREATE CONTACT
-                    task.createContact(idBeta);*/
-
-                    insert++;
-
-                    if(line == insert){
-
-                        task.octopus();
-
-                    }
+                    //CREATE CONTACT
+                    task.createContact(idBeta);
 
                 }
             }, (err) => {
@@ -121,6 +113,80 @@ module.exports = (filesPath, arrayFile) => {
 
             }).catch((e) => {
 
+                console.log(e);
+
+            });
+        },
+
+        createContact: (idBeta) => {
+
+            let thirdPromise = new Promise((res, rej) => {
+
+                let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                pool.query(sql, [idBeta], (err, result) => {
+                    
+                    if(err){
+
+                        rej(err);
+
+                    }
+                    else{
+
+                        res(JSON.parse(JSON.stringify(result)));
+
+                    }
+                });
+            });
+
+            thirdPromise.then((res) => {
+
+                let idRos = res[0].idros;
+
+                let contactsPromise = new Promise ((res, rej) => {
+
+                    pool.query("INSERT INTO contacts(id) VALUES \
+                    ('"+ idRos + "')",  
+                    (err, result) => {
+
+                        if(err){
+
+                            rej(err);
+
+                        }
+                        else {
+
+                            res(result);
+
+                        }
+                    });
+                });
+
+                contactsPromise.then((res) => {
+
+                    if(res){
+
+                        insert++;
+
+                        if(line == insert){
+
+                            task.octopus();
+
+                        }
+                    }
+                }, (err) => {
+
+                    console.log(err);
+
+                }).catch((e) => {
+
+                    console.log(e);
+
+                });
+
+            }, (err) => {
+                console.log(err);
+            }).catch((e) => {
+                
                 console.log(e);
 
             });
