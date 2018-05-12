@@ -1,8 +1,5 @@
 let filesPath = './csvfiles/';
-let mainPath = filesPath + 'contacts.csv';
 
-let rosStone = require('./rosetta/main')(/*mainPath,*/filesPath);
-
-//rosStone.contact();
+let rosStone = require('./rosetta/main')(filesPath);
 
 rosStone.files();               

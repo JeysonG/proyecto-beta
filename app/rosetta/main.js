@@ -1,16 +1,8 @@
 let fs = require('fs');
 
-module.exports = (/*mainPath, */filesPath) => {
+module.exports = (filesPath) => {
 
     const task = {
-
-        contact: () => {
-
-            let contactTask = require('./contact')(mainPath);
-
-            contactTask.readCsv();
-
-        },
 
         files: () => {
 
@@ -25,8 +17,6 @@ module.exports = (/*mainPath, */filesPath) => {
                         rej(err);
                 
                     } else {
-                        
-                        //sizeFiles = files.length;
         
                         res(files);
         
@@ -36,15 +26,10 @@ module.exports = (/*mainPath, */filesPath) => {
 
             firstPromise.then((res) => {
 
-                //for(let i = 0; i < sizeFiles; i++){
+                let filesTask = require('./files')(filesPath, res);
 
-                    //let nameProcess = res[i].split('.')
-
-                    let filesTask = require('./files')(filesPath, /*nameProcess[0]*/res);
-
-                    filesTask.readCsv();
+                filesTask.readCsv();
         
-                //}
             }, (err) => {
                 console.log(err);
             }).catch((e) => {
