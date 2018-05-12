@@ -4,6 +4,9 @@ let moment = require('moment');
 let pool = require('../dbConfig/credentials');
 let timeCreate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 
+let line = 0;
+let insert = 0;
+
 module.exports = (filesPath, fileCsv) => {
 
     task = {
@@ -22,6 +25,8 @@ module.exports = (filesPath, fileCsv) => {
                 csvStream.pause();
         
                 if(counter > 0){   
+
+                    line++;
 
                     //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
@@ -70,6 +75,14 @@ module.exports = (filesPath, fileCsv) => {
 
                             //STATES
                             task.state(idRos, record[4]);
+
+                            insert++;
+
+                            if(line == insert){
+
+                                console.log('Upload Database');
+
+                            }
 
                         }, (err) => {
 
@@ -121,6 +134,8 @@ module.exports = (filesPath, fileCsv) => {
                 csvStream.pause();
         
                 if(counter > 0){   
+
+                    line++;
                     
                     //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
@@ -153,6 +168,16 @@ module.exports = (filesPath, fileCsv) => {
 
                                 console.log(err);
 
+                            }
+                            else {
+
+                                insert++;
+
+                                if(line == insert){
+
+                                    console.log('Upload Database');
+
+                                }
                             }
                         });
 
@@ -197,6 +222,8 @@ module.exports = (filesPath, fileCsv) => {
         
                 if(counter > 0){   
 
+                    line++;
+
                     //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
 
@@ -228,6 +255,16 @@ module.exports = (filesPath, fileCsv) => {
 
                                 console.log(err);
 
+                            }
+                            else {
+
+                                insert++;
+
+                                if(line == insert){
+
+                                    console.log('Upload Database');
+
+                                }
                             }
                         });
 
@@ -273,6 +310,8 @@ module.exports = (filesPath, fileCsv) => {
         
                 if(counter > 0){   
 
+                    line++;
+
                     //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
 
@@ -300,6 +339,17 @@ module.exports = (filesPath, fileCsv) => {
                             if(err){
 
                                 console.log(err);
+
+                            }
+                            else {
+
+                                insert++;
+
+                                if(line == insert){
+
+                                    console.log('Upload Database');
+
+                                }
 
                             }
                         });
@@ -346,6 +396,8 @@ module.exports = (filesPath, fileCsv) => {
         
                 if(counter > 0){   
 
+                    line++;
+
                     //CONSULTAR ROSETTA
                     let firstPromise = new Promise((res, rej) => {
 
@@ -380,6 +432,16 @@ module.exports = (filesPath, fileCsv) => {
 
                             console.log(err);
 
+                        }
+                        else {
+
+                            insert++;
+
+                            if(line == insert){
+
+                                console.log('Upload Database');
+
+                            }
                         }
                     });
                     }, (err) => {
