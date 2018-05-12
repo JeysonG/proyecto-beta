@@ -103,16 +103,8 @@ module.exports = (filesPath, arrayFile) => {
                 
                 if(res){
 
-                    /*//CREATE CONTACT
-                    task.createContact(idBeta);*/
-
-                    insert++;
-
-                    if(line == insert){
-
-                        task.octopus();
-
-                    }
+                    //CREATE CONTACT
+                    task.createContact(idBeta);
 
                 }
             }, (err) => {
@@ -126,7 +118,7 @@ module.exports = (filesPath, arrayFile) => {
             });
         },
 
-        /*createContact: (idBeta) => {
+        createContact: (idBeta) => {
 
             let thirdPromise = new Promise((res, rej) => {
 
@@ -150,7 +142,7 @@ module.exports = (filesPath, arrayFile) => {
 
                 let idRos = res[0].idros;
 
-                let addressPromise = new Promise((res, rej) => {
+               /* let addressPromise = new Promise((res, rej) => {
 
                     pool.query("INSERT INTO address(contact_is) VALUES \
                     ('"+ idRos + "')",  
@@ -188,7 +180,7 @@ module.exports = (filesPath, arrayFile) => {
 
                         }
                     });
-                });
+                });*/
 
                 let contactsPromise = new Promise ((res, rej) => {
 
@@ -203,13 +195,35 @@ module.exports = (filesPath, arrayFile) => {
                         }
                         else {
 
-                            res('Load contacts table');
+                            res(result);
 
                         }
                     });
                 });
 
-                let phonesPromise = new Promise ((res, rej) => {
+                contactsPromise.then((res) => {
+
+                    if(res){
+
+                        insert++;
+
+                        if(line == insert){
+
+                            task.octopus();
+
+                        }
+                    }
+                }, (err) => {
+
+                    console.log(err);
+
+                }).catch((e) => {
+
+                    console.log(e);
+
+                });
+
+                /*let phonesPromise = new Promise ((res, rej) => {
 
                     pool.query("INSERT INTO phones(contact_id) VALUES \
                     ('"+ idRos + "')",  
@@ -242,7 +256,7 @@ module.exports = (filesPath, arrayFile) => {
 
                     console.log(reason);
 
-                })
+                })*/
 
             }, (err) => {
                 console.log(err);
@@ -251,7 +265,7 @@ module.exports = (filesPath, arrayFile) => {
                 console.log(e);
 
             });
-        },*/
+        },
 
         octopus: () => {
 

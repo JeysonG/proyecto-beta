@@ -219,17 +219,17 @@ module.exports = (filesPath, fileCsv) => {
 
                     firstPromise.then((idRos) => {
 
-                        //INSERT CONTACTS
-                        let sql = "INSERT INTO  contacts (id, first_name, last_name, company, web, created_at) VALUES \
-                        ('"+ idRos + "', '" + record[1] + "', '" + record[2] + "', '" + record[3] + "', '" + record[4] + "', '" + timeCreate + "')";
-                        pool.query(sql, (err) => {
+                        //UPDATE CONTACTS
+                        pool.query("UPDATE  contacts SET first_name = '" + record[1] + "', last_name = '" + record[2] + 
+                        "', company = '" + record[3] + "', web = '" + record[4] +"', updated_at = '" + timeCreate + "' WHERE id = " + idRos,  
+                        (err) => {
 
-                        if(err){
+                            if(err){
 
-                            console.log(err);
+                                console.log(err);
 
-                        }
-                    });
+                            }
+                        });
 
                     }, (err) => {
 
