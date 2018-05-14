@@ -15,7 +15,7 @@ module.exports = (filesPath, arrayFile) => {
         
             let csvStream = csv.fromPath(filesPath + arrayFile[0], {
         
-                delimiter: ",",
+                delimiter: ","
         
             })
             .on('data', (record) => {
