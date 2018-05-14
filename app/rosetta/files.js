@@ -11,18 +11,19 @@ module.exports = (filesPath, arrayFile) => {
 
         readCsv: () => {
 
-            let counter = 0;
+            //let counter = 0;
         
             let csvStream = csv.fromPath(filesPath + arrayFile[0], {
         
-                delimiter: ","
+                delimiter: ",",
+                headers: true
         
             })
             .on('data', (record) => {
     
                 csvStream.pause();
         
-                if(counter > 0){   
+                //if(counter > 0){   
                     
                     line++;
         
@@ -30,7 +31,7 @@ module.exports = (filesPath, arrayFile) => {
                     let firstPromise = new Promise((res, rej) => {
 
                         let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                        pool.query(sql, [record[0]], (error, result) => {
+                        pool.query(sql, [record.contact_id], (error, result) => {
                     
                             if(error){
         
@@ -50,7 +51,7 @@ module.exports = (filesPath, arrayFile) => {
                         if(res.length == 0){
 
                             //CREATE ROSETTA
-                            task.initRosetta(record[0]);
+                            task.initRosetta(record.contact_id);
 
                         }
                     }, (err) => {
@@ -62,9 +63,9 @@ module.exports = (filesPath, arrayFile) => {
                         console.log(e);
 
                     });
-                }
+               // }
         
-                ++counter;
+                //++counter;
         
                 csvStream.resume();
         

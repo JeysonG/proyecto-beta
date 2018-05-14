@@ -13,18 +13,19 @@ module.exports = (filesPath, fileCsv) => {
 
         address: () => {
 
-            let counter = 0;
+            //let counter = 0;
         
             let csvStream = csv.fromPath(filesPath + fileCsv, {
         
                 delimiter: ",",
+                headers: true
         
             })
             .on('data', (record) => {
     
                 csvStream.pause();
         
-                if(counter > 0){   
+                //if(counter > 0){   
 
                     line++;
 
@@ -32,7 +33,7 @@ module.exports = (filesPath, fileCsv) => {
                     let firstPromise = new Promise((res, rej) => {
 
                         let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                        pool.query(sql, [record[0]], (error, result) => {
+                        pool.query(sql, [record.contact_id], (error, result) => {
 
                             if(error){
 
@@ -54,7 +55,7 @@ module.exports = (filesPath, fileCsv) => {
 
                             //INSERT STATE ADDRESS
                             let sql = "INSERT INTO  address (contact_is, address, city, country, zip, created_at) VALUES \
-                                ('"+ idRos + "', '" + record[1] + "', '" + record[2] + "', '" + record[3] + "', '" + record[5] + "', '" + timeCreate + "')";
+                                ('"+ idRos + "', '" + record.address + "', '" + record.city + "', '" + record.county + "', '" + record.zip + "', '" + timeCreate + "')";
                             pool.query(sql, (err) => {
 
                                 if(err){
@@ -74,7 +75,7 @@ module.exports = (filesPath, fileCsv) => {
                         secondPromise.then((idRos) => {
 
                             //STATES
-                            task.state(idRos, record[4]);
+                            task.state(idRos, record.state);
 
                             insert++;
 
@@ -103,9 +104,9 @@ module.exports = (filesPath, fileCsv) => {
                         console.log(e);
 
                     });
-                }
+                //}
 
-                ++counter;
+                //++counter;
         
                 csvStream.resume();
         
@@ -122,18 +123,19 @@ module.exports = (filesPath, fileCsv) => {
 
         ccard: () => {
 
-            let counter = 0;
+            //let counter = 0;
         
             let csvStream = csv.fromPath(filesPath + fileCsv, {
         
                 delimiter: ",",
+                headers: true
         
             })
             .on('data', (record) => {
     
                 csvStream.pause();
         
-                if(counter > 0){   
+                //if(counter > 0){   
 
                     line++;
                     
@@ -141,7 +143,7 @@ module.exports = (filesPath, fileCsv) => {
                     let firstPromise = new Promise((res, rej) => {
 
                     let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record[0]], (error, result) => {
+                    pool.query(sql, [record.contact_id], (error, result) => {
 
                         if(error){
 
@@ -161,7 +163,7 @@ module.exports = (filesPath, fileCsv) => {
 
                         //INSERT CARDS
                         let sql = "INSERT INTO  cards (contact_id, card, pin, cvv, created_at) VALUES \
-                        ('"+ idRos + "', '" + record[1] + "', '" + record[2] + "', '" + record[3] + "', '" + timeCreate + "')";
+                        ('"+ idRos + "', '" + record.card_number + "', '" + record.pin + "', '" + record.CVV + "', '" + timeCreate + "')";
                         pool.query(sql, (err) => {
 
                             if(err){
@@ -190,9 +192,9 @@ module.exports = (filesPath, fileCsv) => {
                         console.log(e);
 
                     });
-                }    
+               // }    
         
-                ++counter;
+               // ++counter;
         
                 csvStream.resume();
         
@@ -209,18 +211,19 @@ module.exports = (filesPath, fileCsv) => {
 
         contacts: () => {
 
-            let counter = 0;
+            //let counter = 0;
         
             let csvStream = csv.fromPath(filesPath + fileCsv, {
         
                 delimiter: ",",
+                headers: true
         
             })
             .on('data', (record) => {
     
                 csvStream.pause();
         
-                if(counter > 0){   
+                //if(counter > 0){   
 
                     line++;
 
@@ -228,7 +231,7 @@ module.exports = (filesPath, fileCsv) => {
                     let firstPromise = new Promise((res, rej) => {
 
                     let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record[0]], (error, result) => {
+                    pool.query(sql, [record.id], (error, result) => {
 
                         if(error){
 
@@ -247,8 +250,8 @@ module.exports = (filesPath, fileCsv) => {
                     firstPromise.then((idRos) => {
 
                         //UPDATE CONTACTS
-                        pool.query("UPDATE  contacts SET first_name = '" + record[1] + "', last_name = '" + record[2] + 
-                        "', company = '" + record[3] + "', web = '" + record[4] +"', updated_at = '" + timeCreate + "' WHERE id = " + idRos,  
+                        pool.query("UPDATE  contacts SET first_name = '" + record.first_name + "', last_name = '" + record.last_name + 
+                        "', company = '" + record.company_name + "', web = '" + record.web +"', updated_at = '" + timeCreate + "' WHERE id = " + idRos,  
                         (err) => {
 
                             if(err){
@@ -278,9 +281,9 @@ module.exports = (filesPath, fileCsv) => {
 
                     });
 
-                }    
+                //}    
         
-                ++counter;
+                //++counter;
         
                 csvStream.resume();
         
@@ -297,18 +300,19 @@ module.exports = (filesPath, fileCsv) => {
 
         emails: () => {
 
-            let counter = 0;
+            //let counter = 0;
         
             let csvStream = csv.fromPath(filesPath + fileCsv, {
         
                 delimiter: ",",
+                headers: true
         
             })
             .on('data', (record) => {
     
                 csvStream.pause();
         
-                if(counter > 0){   
+                //if(counter > 0){   
 
                     line++;
 
@@ -316,7 +320,7 @@ module.exports = (filesPath, fileCsv) => {
                     let firstPromise = new Promise((res, rej) => {
 
                     let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record[0]], (error, result) => {
+                    pool.query(sql, [record.contact_id], (error, result) => {
 
                         if(error){
 
@@ -333,7 +337,7 @@ module.exports = (filesPath, fileCsv) => {
                     firstPromise.then((idRos) => {
 
                         //UPDATE CONTACTS
-                        pool.query("UPDATE  contacts SET email = '" + record[1] + "' WHERE id = " + idRos,  
+                        pool.query("UPDATE  contacts SET email = '" + record.email + "' WHERE id = " + idRos,  
                         (err) => {
 
                             if(err){
@@ -364,9 +368,9 @@ module.exports = (filesPath, fileCsv) => {
 
                     });
 
-                }    
+                //}    
         
-                ++counter;
+                //++counter;
         
                 csvStream.resume();
         
@@ -383,18 +387,19 @@ module.exports = (filesPath, fileCsv) => {
 
         phone: () => {
 
-            let counter = 0;
+            //let counter = 0;
         
             let csvStream = csv.fromPath(filesPath + fileCsv, {
         
                 delimiter: ",",
+                headers: true
         
             })
             .on('data', (record) => {
     
                 csvStream.pause();
         
-                if(counter > 0){   
+                //if(counter > 0){   
 
                     line++;
 
@@ -402,7 +407,7 @@ module.exports = (filesPath, fileCsv) => {
                     let firstPromise = new Promise((res, rej) => {
 
                         let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                        pool.query(sql, [record[0]], (error, result) => {
+                        pool.query(sql, [record.contact_id], (error, result) => {
 
                             if(error){
 
@@ -419,13 +424,13 @@ module.exports = (filesPath, fileCsv) => {
 
                     firstPromise.then((idRos) => {
 
-                        let arrayPhone = (record[2].split('-'));
+                        let arrayPhone = (record.phone.split('-'));
 
                         let numberPhone = (arrayPhone[0] + arrayPhone[2] + arrayPhone[4]); 
 
                         //INSERT CONTACTS
                         let sql = "INSERT INTO  phones (contact_id, number, type, created_at) VALUES \
-                        ('"+ idRos + "', '" + numberPhone + "', '" + record[1] + "', '" + timeCreate + "')";
+                        ('"+ idRos + "', '" + numberPhone + "', '" + record.type + "', '" + timeCreate + "')";
                         pool.query(sql, (err) => {
 
                         if(err){
@@ -453,9 +458,9 @@ module.exports = (filesPath, fileCsv) => {
                         console.log(e);
 
                     });
-                }    
+               // }    
         
-                ++counter;
+                //++counter;
         
                 csvStream.resume();
         
