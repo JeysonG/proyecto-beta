@@ -12,8 +12,6 @@ module.exports = (filesPath, fileCsv) => {
     task = {
 
         address: () => {
-
-            //let counter = 0;
         
             let csvStream = csv.fromPath(filesPath + fileCsv, {
         
@@ -24,76 +22,64 @@ module.exports = (filesPath, fileCsv) => {
             .on('data', (record) => {
     
                 csvStream.pause();
-        
-                //if(counter > 0){   
 
-                    line++;
+                line++;
 
-                    //CONSULTAR ROSETTA
-                    let firstPromise = new Promise((res, rej) => {
+                //CONSULTAR ROSETTA
+                let firstPromise = new Promise((res, rej) => {
 
-                        let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                        pool.query(sql, [record.contact_id], (error, result) => {
+                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                    pool.query(sql, [record.contact_id], (error, result) => {
 
-                            if(error){
+                        if(error){
 
-                                rej(error);
+                            rej(error);
 
-                            }
-                            else{
+                        }
+                        else{
 
-                                res(JSON.parse(JSON.stringify(result[0].idros)));
-                                
-                            }
-                        });
-
+                            res(JSON.parse(JSON.stringify(result[0].idros)));
+                            
+                        }
                     });
 
-                    firstPromise.then((idRos) => {
+                });
 
-                        let secondPromise = new Promise((res, rej) => {
+                firstPromise.then((idRos) => {
 
-                            //INSERT STATE ADDRESS
-                            let sql = "INSERT INTO  address (contact_is, address, city, country, zip, created_at) VALUES \
-                                ('"+ idRos + "', '" + record.address + "', '" + record.city + "', '" + record.county + "', '" + record.zip + "', '" + timeCreate + "')";
-                            pool.query(sql, (err) => {
+                    let secondPromise = new Promise((res, rej) => {
 
-                                if(err){
+                        //INSERT STATE ADDRESS
+                        let sql = "INSERT INTO  address (contact_is, address, city, country, zip, created_at) VALUES \
+                            ('"+ idRos + "', '" + record.address + "', '" + record.city + "', '" + record.county + "', '" + record.zip + "', '" + timeCreate + "')";
+                        pool.query(sql, (err) => {
 
-                                    rej(err);
+                            if(err){
 
-                                }
-                                else {
-
-                                    res(idRos);
-                                }
-                            });
-
-                            
-                        });
-
-                        secondPromise.then((idRos) => {
-
-                            //STATES
-                            task.state(idRos, record.state);
-
-                            insert++;
-
-                            if(line == insert){
-
-                                console.log('Upload Database');
+                                rej(err);
 
                             }
+                            else {
 
-                        }, (err) => {
-
-                            console.log(err);
-
-                        }).catch((e) => {
-
-                            console.log(e);
-
+                                res(idRos);
+                            }
                         });
+
+                        
+                    });
+
+                    secondPromise.then((idRos) => {
+
+                        //STATES
+                        task.state(idRos, record.state);
+
+                        insert++;
+
+                        if(line == insert){
+
+                            console.log('Upload Database');
+
+                        }
 
                     }, (err) => {
 
@@ -104,9 +90,16 @@ module.exports = (filesPath, fileCsv) => {
                         console.log(e);
 
                     });
-                //}
 
-                //++counter;
+                }, (err) => {
+
+                    console.log(err);
+
+                }).catch((e) => {
+
+                    console.log(e);
+
+                });
         
                 csvStream.resume();
         
@@ -122,8 +115,6 @@ module.exports = (filesPath, fileCsv) => {
         },
 
         ccard: () => {
-
-            //let counter = 0;
         
             let csvStream = csv.fromPath(filesPath + fileCsv, {
         
@@ -134,304 +125,35 @@ module.exports = (filesPath, fileCsv) => {
             .on('data', (record) => {
     
                 csvStream.pause();
-        
-                //if(counter > 0){   
 
-                    line++;
-                    
-                    //CONSULTAR ROSETTA
-                    let firstPromise = new Promise((res, rej) => {
+                line++;
+                
+                //CONSULTAR ROSETTA
+                let firstPromise = new Promise((res, rej) => {
 
-                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record.contact_id], (error, result) => {
+                let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                pool.query(sql, [record.contact_id], (error, result) => {
 
-                        if(error){
+                    if(error){
 
-                            rej(error);
+                        rej(error);
 
-                        }
-                        else{
+                    }
+                    else{
 
-                            res(JSON.parse(JSON.stringify(result[0].idros)));
+                        res(JSON.parse(JSON.stringify(result[0].idros)));
 
-                        }
-                    });
+                    }
+                });
 
-                    });
+                });
 
-                    firstPromise.then((idRos) => {
+                firstPromise.then((idRos) => {
 
-                        //INSERT CARDS
-                        let sql = "INSERT INTO  cards (contact_id, card, pin, cvv, created_at) VALUES \
-                        ('"+ idRos + "', '" + record.card_number + "', '" + record.pin + "', '" + record.CVV + "', '" + timeCreate + "')";
-                        pool.query(sql, (err) => {
-
-                            if(err){
-
-                                console.log(err);
-
-                            }
-                            else {
-
-                                insert++;
-
-                                if(line == insert){
-
-                                    console.log('Upload Database');
-
-                                }
-                            }
-                        });
-
-                    }, (err) => {
-
-                        console.log(err);
-
-                    }).catch((e) => {
-
-                        console.log(e);
-
-                    });
-               // }    
-        
-               // ++counter;
-        
-                csvStream.resume();
-        
-            }).on('end', () => {
-
-                console.log('Csv cards readed');
-
-            }).on('error', (err) => {
-        
-                console.log(err);
-        
-            }); 
-        },
-
-        contacts: () => {
-
-            //let counter = 0;
-        
-            let csvStream = csv.fromPath(filesPath + fileCsv, {
-        
-                delimiter: ",",
-                headers: true
-        
-            })
-            .on('data', (record) => {
-    
-                csvStream.pause();
-        
-                //if(counter > 0){   
-
-                    line++;
-
-                    //CONSULTAR ROSETTA
-                    let firstPromise = new Promise((res, rej) => {
-
-                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record.id], (error, result) => {
-
-                        if(error){
-
-                            rej(error);
-
-                        }
-                        else{
-
-                            res(JSON.parse(JSON.stringify(result[0].idros)));
-
-                        }
-                    });
-
-                    });
-
-                    firstPromise.then((idRos) => {
-
-                        //UPDATE CONTACTS
-                        pool.query("UPDATE  contacts SET first_name = '" + record.first_name + "', last_name = '" + record.last_name + 
-                        "', company = '" + record.company_name + "', web = '" + record.web +"', updated_at = '" + timeCreate + "' WHERE id = " + idRos,  
-                        (err) => {
-
-                            if(err){
-
-                                console.log(err);
-
-                            }
-                            else {
-
-                                insert++;
-
-                                if(line == insert){
-
-                                    console.log('Upload Database');
-
-                                }
-                            }
-                        });
-
-                    }, (err) => {
-
-                        console.log(err);
-
-                    }).catch((e) => {
-
-                        console.log(e);
-
-                    });
-
-                //}    
-        
-                //++counter;
-        
-                csvStream.resume();
-        
-            }).on('end', () => {
-
-                console.log('Csv contacts readed');
-
-            }).on('error', (err) => {
-        
-                console.log(err);
-        
-            }); 
-        },
-
-        emails: () => {
-
-            //let counter = 0;
-        
-            let csvStream = csv.fromPath(filesPath + fileCsv, {
-        
-                delimiter: ",",
-                headers: true
-        
-            })
-            .on('data', (record) => {
-    
-                csvStream.pause();
-        
-                //if(counter > 0){   
-
-                    line++;
-
-                    //CONSULTAR ROSETTA
-                    let firstPromise = new Promise((res, rej) => {
-
-                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record.contact_id], (error, result) => {
-
-                        if(error){
-
-                            rej(error);
-
-                        }
-                        else{
-                            res(JSON.parse(JSON.stringify(result[0].idros)));
-                        }
-                    });
-
-                    });
-
-                    firstPromise.then((idRos) => {
-
-                        //UPDATE CONTACTS
-                        pool.query("UPDATE  contacts SET email = '" + record.email + "' WHERE id = " + idRos,  
-                        (err) => {
-
-                            if(err){
-
-                                console.log(err);
-
-                            }
-                            else {
-
-                                insert++;
-
-                                if(line == insert){
-
-                                    console.log('Upload Database');
-
-                                }
-
-                            }
-                        });
-
-                    }, (err) => {
-
-                        console.log(err);
-
-                    }).catch((e) => {
-
-                        console.log(e);
-
-                    });
-
-                //}    
-        
-                //++counter;
-        
-                csvStream.resume();
-        
-            }).on('end', () => {
-
-                console.log('Csv emails readed');
-
-            }).on('error', (err) => {
-        
-                console.log(err);
-        
-            }); 
-        },
-
-        phone: () => {
-
-            //let counter = 0;
-        
-            let csvStream = csv.fromPath(filesPath + fileCsv, {
-        
-                delimiter: ",",
-                headers: true
-        
-            })
-            .on('data', (record) => {
-    
-                csvStream.pause();
-        
-                //if(counter > 0){   
-
-                    line++;
-
-                    //CONSULTAR ROSETTA
-                    let firstPromise = new Promise((res, rej) => {
-
-                        let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                        pool.query(sql, [record.contact_id], (error, result) => {
-
-                            if(error){
-
-                                rej(error);
-
-                            }
-                            else{
-
-                                res(JSON.parse(JSON.stringify(result[0].idros)));
-
-                            }
-                        });
-                    });
-
-                    firstPromise.then((idRos) => {
-
-                        let arrayPhone = (record.phone.split('-'));
-
-                        let numberPhone = (arrayPhone[0] + arrayPhone[2] + arrayPhone[4]); 
-
-                        //INSERT CONTACTS
-                        let sql = "INSERT INTO  phones (contact_id, number, type, created_at) VALUES \
-                        ('"+ idRos + "', '" + numberPhone + "', '" + record.type + "', '" + timeCreate + "')";
-                        pool.query(sql, (err) => {
+                    //INSERT CARDS
+                    let sql = "INSERT INTO  cards (contact_id, card, pin, cvv, created_at) VALUES \
+                    ('"+ idRos + "', '" + record.card_number + "', '" + record.pin + "', '" + record.CVV + "', '" + timeCreate + "')";
+                    pool.query(sql, (err) => {
 
                         if(err){
 
@@ -449,18 +171,259 @@ module.exports = (filesPath, fileCsv) => {
                             }
                         }
                     });
-                    }, (err) => {
+
+                }, (err) => {
+
+                    console.log(err);
+
+                }).catch((e) => {
+
+                    console.log(e);
+
+                });
+        
+                csvStream.resume();
+        
+            }).on('end', () => {
+
+                console.log('Csv cards readed');
+
+            }).on('error', (err) => {
+        
+                console.log(err);
+        
+            }); 
+        },
+
+        contacts: () => {
+        
+            let csvStream = csv.fromPath(filesPath + fileCsv, {
+        
+                delimiter: ",",
+                headers: true
+        
+            })
+            .on('data', (record) => {
+    
+                csvStream.pause();
+    
+                line++;
+
+                //CONSULTAR ROSETTA
+                let firstPromise = new Promise((res, rej) => {
+
+                let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                pool.query(sql, [record.id], (error, result) => {
+
+                    if(error){
+
+                        rej(error);
+
+                    }
+                    else{
+
+                        res(JSON.parse(JSON.stringify(result[0].idros)));
+
+                    }
+                });
+
+                });
+
+                firstPromise.then((idRos) => {
+
+                    //UPDATE CONTACTS
+                    pool.query("UPDATE  contacts SET first_name = '" + record.first_name + "', last_name = '" + record.last_name + 
+                    "', company = '" + record.company_name + "', web = '" + record.web +"', updated_at = '" + timeCreate + "' WHERE id = " + idRos,  
+                    (err) => {
+
+                        if(err){
+
+                            console.log(err);
+
+                        }
+                        else {
+
+                            insert++;
+
+                            if(line == insert){
+
+                                console.log('Upload Database');
+
+                            }
+                        }
+                    });
+
+                }, (err) => {
+
+                    console.log(err);
+
+                }).catch((e) => {
+
+                    console.log(e);
+
+                });
+        
+                csvStream.resume();
+        
+            }).on('end', () => {
+
+                console.log('Csv contacts readed');
+
+            }).on('error', (err) => {
+        
+                console.log(err);
+        
+            }); 
+        },
+
+        emails: () => {
+        
+            let csvStream = csv.fromPath(filesPath + fileCsv, {
+        
+                delimiter: ",",
+                headers: true
+        
+            })
+            .on('data', (record) => {
+    
+                csvStream.pause();
+
+                line++;
+
+                //CONSULTAR ROSETTA
+                let firstPromise = new Promise((res, rej) => {
+
+                let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                pool.query(sql, [record.contact_id], (error, result) => {
+
+                    if(error){
+
+                        rej(error);
+
+                    }
+                    else{
+                        res(JSON.parse(JSON.stringify(result[0].idros)));
+                    }
+                });
+
+                });
+
+                firstPromise.then((idRos) => {
+
+                    //UPDATE CONTACTS
+                    pool.query("UPDATE  contacts SET email = '" + record.email + "' WHERE id = " + idRos,  
+                    (err) => {
+
+                        if(err){
+
+                            console.log(err);
+
+                        }
+                        else {
+
+                            insert++;
+
+                            if(line == insert){
+
+                                console.log('Upload Database');
+
+                            }
+
+                        }
+                    });
+
+                }, (err) => {
+
+                    console.log(err);
+
+                }).catch((e) => {
+
+                    console.log(e);
+
+                });
+        
+                csvStream.resume();
+        
+            }).on('end', () => {
+
+                console.log('Csv emails readed');
+
+            }).on('error', (err) => {
+        
+                console.log(err);
+        
+            }); 
+        },
+
+        phone: () => {
+        
+            let csvStream = csv.fromPath(filesPath + fileCsv, {
+        
+                delimiter: ",",
+                headers: true
+        
+            })
+            .on('data', (record) => {
+    
+                csvStream.pause();
+        
+                line++;
+
+                //CONSULTAR ROSETTA
+                let firstPromise = new Promise((res, rej) => {
+
+                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                    pool.query(sql, [record.contact_id], (error, result) => {
+
+                        if(error){
+
+                            rej(error);
+
+                        }
+                        else{
+
+                            res(JSON.parse(JSON.stringify(result[0].idros)));
+
+                        }
+                    });
+                });
+
+                firstPromise.then((idRos) => {
+
+                    let arrayPhone = (record.phone.split('-'));
+
+                    let numberPhone = (arrayPhone[0] + arrayPhone[2] + arrayPhone[4]); 
+
+                    //INSERT CONTACTS
+                    let sql = "INSERT INTO  phones (contact_id, number, type, created_at) VALUES \
+                    ('"+ idRos + "', '" + numberPhone + "', '" + record.type + "', '" + timeCreate + "')";
+                    pool.query(sql, (err) => {
+
+                    if(err){
 
                         console.log(err);
 
-                    }).catch((e) => {
+                    }
+                    else {
 
-                        console.log(e);
+                        insert++;
 
-                    });
-               // }    
-        
-                //++counter;
+                        if(line == insert){
+
+                            console.log('Upload Database');
+
+                        }
+                    }
+                });
+                }, (err) => {
+
+                    console.log(err);
+
+                }).catch((e) => {
+
+                    console.log(e);
+
+                });
         
                 csvStream.resume();
         
