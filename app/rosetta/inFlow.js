@@ -11,6 +11,27 @@ module.exports = (filesPath, fileCsv) => {
 
     task = {
 
+        octopus: (idBeta) => {
+
+            return new Promise((res, rej) => {
+
+                let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                pool.query(sql, [idBeta], (error, result) => {
+
+                    if(error){
+
+                        rej(error);
+
+                    }
+                    else{
+
+                        res(JSON.parse(JSON.stringify(result[0].idros)));
+                        
+                    }
+                });
+            });
+        },
+
         address: () => {
         
             let csvStream = csv.fromPath(filesPath + fileCsv, {
@@ -25,28 +46,9 @@ module.exports = (filesPath, fileCsv) => {
 
                 line++;
 
-                //CONSULTAR ROSETTA
-                let firstPromise = new Promise((res, rej) => {
-
-                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record.contact_id], (error, result) => {
-
-                        if(error){
-
-                            rej(error);
-
-                        }
-                        else{
-
-                            res(JSON.parse(JSON.stringify(result[0].idros)));
-                            
-                        }
-                    });
-
-                });
-
-                firstPromise.then((idRos) => {
-
+                task.octopus(record.contact_id)
+                .then((idRos) => {
+       
                     let secondPromise = new Promise((res, rej) => {
 
                         //INSERT STATE ADDRESS
@@ -92,13 +94,13 @@ module.exports = (filesPath, fileCsv) => {
                     });
 
                 }, (err) => {
-
+    
                     console.log(err);
-
+    
                 }).catch((e) => {
-
+    
                     console.log(e);
-
+    
                 });
         
                 csvStream.resume();
@@ -129,26 +131,8 @@ module.exports = (filesPath, fileCsv) => {
                 line++;
                 
                 //CONSULTAR ROSETTA
-                let firstPromise = new Promise((res, rej) => {
-
-                let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                pool.query(sql, [record.contact_id], (error, result) => {
-
-                    if(error){
-
-                        rej(error);
-
-                    }
-                    else{
-
-                        res(JSON.parse(JSON.stringify(result[0].idros)));
-
-                    }
-                });
-
-                });
-
-                firstPromise.then((idRos) => {
+                task.octopus(record.contact_id)
+                .then((idRos) => {
 
                     //INSERT CARDS
                     let sql = "INSERT INTO  cards (contact_id, card, pin, cvv, created_at) VALUES \
@@ -210,26 +194,8 @@ module.exports = (filesPath, fileCsv) => {
                 line++;
 
                 //CONSULTAR ROSETTA
-                let firstPromise = new Promise((res, rej) => {
-
-                let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                pool.query(sql, [record.id], (error, result) => {
-
-                    if(error){
-
-                        rej(error);
-
-                    }
-                    else{
-
-                        res(JSON.parse(JSON.stringify(result[0].idros)));
-
-                    }
-                });
-
-                });
-
-                firstPromise.then((idRos) => {
+                task.octopus(record.id)
+                .then((idRos) => {
 
                     //UPDATE CONTACTS
                     pool.query("UPDATE  contacts SET first_name = '" + record.first_name + "', last_name = '" + record.last_name + 
@@ -291,24 +257,8 @@ module.exports = (filesPath, fileCsv) => {
                 line++;
 
                 //CONSULTAR ROSETTA
-                let firstPromise = new Promise((res, rej) => {
-
-                let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                pool.query(sql, [record.contact_id], (error, result) => {
-
-                    if(error){
-
-                        rej(error);
-
-                    }
-                    else{
-                        res(JSON.parse(JSON.stringify(result[0].idros)));
-                    }
-                });
-
-                });
-
-                firstPromise.then((idRos) => {
+                task.octopus(record.contact_id)
+                .then((idRos) => {
 
                     //UPDATE CONTACTS
                     pool.query("UPDATE  contacts SET email = '" + record.email + "' WHERE id = " + idRos,  
@@ -370,25 +320,8 @@ module.exports = (filesPath, fileCsv) => {
                 line++;
 
                 //CONSULTAR ROSETTA
-                let firstPromise = new Promise((res, rej) => {
-
-                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                    pool.query(sql, [record.contact_id], (error, result) => {
-
-                        if(error){
-
-                            rej(error);
-
-                        }
-                        else{
-
-                            res(JSON.parse(JSON.stringify(result[0].idros)));
-
-                        }
-                    });
-                });
-
-                firstPromise.then((idRos) => {
+                task.octopus(record.contact_id)
+                .then((idRos) => {
 
                     let arrayPhone = (record.phone.split('-'));
 
