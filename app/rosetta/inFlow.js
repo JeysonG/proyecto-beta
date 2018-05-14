@@ -6,6 +6,8 @@ let timeCreate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 
 let line = 0;
 let insert = 0;
+let email = '';
+let cEm = 0;
 
 module.exports = (filesPath, fileCsv) => {
 
@@ -44,8 +46,6 @@ module.exports = (filesPath, fileCsv) => {
     
                 csvStream.pause();
 
-                line++;
-
                 task.octopus(record.contact_id)
                 .then((idRos) => {
        
@@ -74,14 +74,6 @@ module.exports = (filesPath, fileCsv) => {
 
                         //STATES
                         task.state(idRos, record.state);
-
-                        insert++;
-
-                        if(line == insert){
-
-                            console.log('Upload Database');
-
-                        }
 
                     }, (err) => {
 
@@ -127,8 +119,6 @@ module.exports = (filesPath, fileCsv) => {
             .on('data', (record) => {
     
                 csvStream.pause();
-
-                line++;
                 
                 //CONSULTAR ROSETTA
                 task.octopus(record.contact_id)
@@ -143,16 +133,6 @@ module.exports = (filesPath, fileCsv) => {
 
                             console.log(err);
 
-                        }
-                        else {
-
-                            insert++;
-
-                            if(line == insert){
-
-                                console.log('Upload Database');
-
-                            }
                         }
                     });
 
@@ -196,11 +176,10 @@ module.exports = (filesPath, fileCsv) => {
                 //CONSULTAR ROSETTA
                 task.octopus(record.id)
                 .then((idRos) => {
-
-                    //UPDATE CONTACTS
-                    pool.query("UPDATE  contacts SET first_name = '" + record.first_name + "', last_name = '" + record.last_name + 
-                    "', company = '" + record.company_name + "', web = '" + record.web +"', updated_at = '" + timeCreate + "' WHERE id = " + idRos,  
-                    (err) => {
+                    
+                    let sql = "INSERT INTO  contacts (id, first_name, last_name, company, web, created_at) VALUES \
+                    ('"+ idRos + "', '" + record.first_name + "', '" + record.last_name + "', '" + record.company_name + "', '" + record.web + "','" + timeCreate + "')";
+                    pool.query(sql, (err) => {
 
                         if(err){
 
@@ -213,7 +192,7 @@ module.exports = (filesPath, fileCsv) => {
 
                             if(line == insert){
 
-                                console.log('Upload Database');
+                                task.emails();
 
                             }
                         }
@@ -243,7 +222,39 @@ module.exports = (filesPath, fileCsv) => {
         },
 
         emails: () => {
-        
+
+            if(cEm == 0){
+
+                email = fileCsv;
+
+                cEm++;
+
+            }
+
+            pool.query("SELECT * FROM contacts LIMIT 1", (error, result) => {
+
+                if(error){
+
+                    console.log(error);
+
+                }
+                else{
+
+                    console.log(result.length);
+
+                    if(result.length > 0){
+
+                        console.log(fileCsv);
+
+                        task. execEmail(email);
+
+                    }
+                }
+            });
+        },
+
+        execEmail: (fileCsv) => {
+
             let csvStream = csv.fromPath(filesPath + fileCsv, {
         
                 delimiter: ",",
@@ -316,8 +327,6 @@ module.exports = (filesPath, fileCsv) => {
             .on('data', (record) => {
     
                 csvStream.pause();
-        
-                line++;
 
                 //CONSULTAR ROSETTA
                 task.octopus(record.contact_id)
@@ -336,16 +345,6 @@ module.exports = (filesPath, fileCsv) => {
 
                         console.log(err);
 
-                    }
-                    else {
-
-                        insert++;
-
-                        if(line == insert){
-
-                            console.log('Upload Database');
-
-                        }
                     }
                 });
                 }, (err) => {

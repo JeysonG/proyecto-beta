@@ -104,8 +104,13 @@ module.exports = (filesPath, arrayFile) => {
                 
                 if(res){
 
-                    //CREATE CONTACT
-                    task.createContact(idBeta);
+                    insert++;
+
+                    if(line == insert){
+
+                        task.octopus();
+
+                    }
 
                 }
             }, (err) => {
