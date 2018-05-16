@@ -171,7 +171,7 @@ module.exports = (filesPath, fileCsv) => {
     
                 csvStream.pause();
     
-                line++;
+                //line++;
 
                 //CONSULTAR ROSETTA
                 task.octopus(record.id)
@@ -210,7 +210,9 @@ module.exports = (filesPath, fileCsv) => {
         
                 csvStream.resume();
         
-            }).on('end', () => {
+            }).on('end', (data) => {
+
+                line += data;
 
                 console.log('Csv contacts readed');
 
@@ -265,7 +267,7 @@ module.exports = (filesPath, fileCsv) => {
     
                 csvStream.pause();
 
-                line++;
+                //line++;
 
                 //CONSULTAR ROSETTA
                 task.octopus(record.contact_id)
@@ -305,7 +307,9 @@ module.exports = (filesPath, fileCsv) => {
         
                 csvStream.resume();
         
-            }).on('end', () => {
+            }).on('end', (data) => {
+
+                line += data;
 
                 console.log('Csv emails readed');
 
