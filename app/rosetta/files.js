@@ -10,8 +10,6 @@ module.exports = (filesPath, arrayFile) => {
     let task = {
 
         readCsv: () => {
-
-            //let counter = 0;
         
             let csvStream = csv.fromPath(filesPath + arrayFile[0], {
         
@@ -21,55 +19,50 @@ module.exports = (filesPath, arrayFile) => {
             })
             .on('data', (record) => {
     
-                csvStream.pause();
+                csvStream.pause(); 
         
-                //if(counter > 0){   
-                    
-                    line++;
-        
-                    //VERIFICAR ROSETTA
-                    let firstPromise = new Promise((res, rej) => {
+                //VERIFICAR ROSETTA
+                let firstPromise = new Promise((res, rej) => {
 
-                        let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
-                        pool.query(sql, [record.contact_id], (error, result) => {
-                    
-                            if(error){
-        
-                                rej(error);
-        
-                            }
-                            else{
+                    let sql = "SELECT idros FROM rosetta WHERE idbeta = ?";
+                    pool.query(sql, [record.contact_id], (error, result) => {
+                
+                        if(error){
+    
+                            rej(error);
+    
+                        }
+                        else{
 
-                                res(JSON.parse(JSON.stringify(result)));
-
-                            }
-                        });
-                    });
-
-                    firstPromise.then((res) => {
-
-                        if(res.length == 0){
-
-                            //CREATE ROSETTA
-                            task.initRosetta(record.contact_id);
+                            res(JSON.parse(JSON.stringify(result)));
 
                         }
-                    }, (err) => {
-
-                        console.log(err);
-
-                    }).catch((e) => {
-
-                        console.log(e);
-
                     });
-               // }
-        
-                //++counter;
+                });
+
+                firstPromise.then((res) => {
+
+                    if(res.length == 0){
+
+                        //CREATE ROSETTA
+                        task.initRosetta(record.contact_id);
+
+                    }
+                }, (err) => {
+
+                    console.log(err);
+
+                }).catch((e) => {
+
+                    console.log(e);
+
+                });
         
                 csvStream.resume();
         
-            }).on('end', () => {
+            }).on('end', (data) => {
+
+                line = data;
 
                 console.log('Csv readed');
         
